@@ -1105,6 +1105,14 @@ static int info_page_handle_key(struct key_event * k)
 			song_set_current_order(song_get_current_order() + 1);
 		}
 		return 1;
+	case SDLK_EQUALS:
+		/* a user reports that only numpad plus works for them */
+		if (k->state == KEY_RELEASE || !(k->mod & KMOD_SHIFT))
+			return 1;
+		if (song_get_mode() == MODE_PLAYING) {
+			song_set_current_order(song_get_current_order() + 1);
+		}
+		return 1;
 	case SDLK_MINUS:
 		if (k->state == KEY_RELEASE)
 			return 1;
