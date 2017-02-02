@@ -159,20 +159,6 @@ QZA(w);QZA(x);QZA(y);QZA(z);
 void key_translate(struct key_event *k)
 {
 	k->orig_sym = k->sym;
-	if (k->mod & KMOD_SHIFT) {
-		switch (k->sym) {
-		case SDLK_COMMA: k->sym = SDLK_LESS; break;
-		case SDLK_PERIOD: k->sym = SDLK_GREATER; break;
-		case SDLK_4: k->sym = SDLK_DOLLAR; break;
-
-		case SDLK_EQUALS: k->sym = SDLK_PLUS; break;
-		case SDLK_SEMICOLON: k->sym = SDLK_COLON; break;
-
-		case SDLK_8: k->sym = SDLK_ASTERISK; break;
-		default:
-			break;
-		};
-	}
 	if (k->mod & KMOD_META) {
 		k->mod = ((k->mod & ~KMOD_META)
 			  | ((status.flags & META_IS_CTRL)
@@ -230,6 +216,46 @@ void key_translate(struct key_event *k)
 		default:
 			break;
 		};
+	}
+
+	/* punct. characters can be mapped differently on int'l keyboards.
+	 * the only reliable way to get them is by their unicode repr.
+	 * not all of these are actually used by schism currently. */
+	if (k->unicode) {
+		switch (k->unicode) {
+		case '`': k->sym = SDLK_BACKQUOTE; break;
+		case '~': k->sym = SDLK_BACKQUOTE; k->mod = KMOD_SHIFT; break;
+		case '!': k->sym = SDLK_EXCLAIM; break;
+		case '@': k->sym = SDLK_AT; break;
+		case '#': k->sym = SDLK_HASH; break;
+		case '$': k->sym = SDLK_DOLLAR; break;
+		case '%': k->sym = SDLK_5; k->mod = KMOD_SHIFT; break;
+		case '^': k->sym = SDLK_CARET; break;
+		case '&': k->sym = SDLK_AMPERSAND; break;
+		case '*': k->sym = SDLK_ASTERISK; break;
+		case '(': k->sym = SDLK_LEFTPAREN; break;
+		case ')': k->sym = SDLK_RIGHTPAREN; break;
+		case '-': k->sym = SDLK_MINUS; break;
+		case '_': k->sym = SDLK_UNDERSCORE; break;
+		case '=': k->sym = SDLK_EQUALS; break;
+		case '+': k->sym = SDLK_PLUS; break;
+		case '[': k->sym = SDLK_LEFTBRACKET; break;
+		case '{': k->sym = SDLK_LEFTBRACKET; k->mod = KMOD_SHIFT; break;
+		case ']': k->sym = SDLK_RIGHTBRACKET; break;
+		case '}': k->sym = SDLK_RIGHTBRACKET; k->mod = KMOD_SHIFT; break;
+		case '\\': k->sym = SDLK_BACKSLASH; break;
+		case '|': k->sym = SDLK_BACKSLASH; k->mod = KMOD_SHIFT; break;
+		case ';': k->sym = SDLK_SEMICOLON; break;
+		case ':': k->sym = SDLK_COLON; break;
+		case '\'': k->sym = SDLK_QUOTE; break;
+		case '"': k->sym = SDLK_QUOTEDBL; break;
+		case ',': k->sym = SDLK_COMMA; break;
+		case '<': k->sym = SDLK_LESS; break;
+		case '.': k->sym = SDLK_PERIOD; break;
+		case '>': k->sym = SDLK_GREATER; break;
+		case '/': k->sym = SDLK_SLASH; break;
+		case '?': k->sym = SDLK_QUESTION; break;
+		}
 	}
 
 	if (k->sym == k->orig_sym) {
