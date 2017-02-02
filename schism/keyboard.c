@@ -255,6 +255,7 @@ void key_translate(struct key_event *k)
 		case '>': k->sym = SDLK_GREATER; break;
 		case '/': k->sym = SDLK_SLASH; break;
 		case '?': k->sym = SDLK_QUESTION; break;
+		case 167: k->sym = SDLK_BACKQUOTE; break;  /* § for finns */
 		}
 	}
 
