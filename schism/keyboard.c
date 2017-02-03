@@ -222,6 +222,8 @@ void key_translate(struct key_event *k)
 	 * the only reliable way to get them is by their unicode repr.
 	 * not all of these are actually used by schism currently. */
 	if (k->unicode) {
+		int orig_mod = k->mod;
+		k->mod &= ~KMOD_SHIFT;  /* on a match, default to no shift */
 		switch (k->unicode) {
 		case '`': k->sym = SDLK_BACKQUOTE; break;
 		case '~': k->sym = SDLK_BACKQUOTE; k->mod = KMOD_SHIFT; break;
@@ -256,6 +258,7 @@ void key_translate(struct key_event *k)
 		case '/': k->sym = SDLK_SLASH; break;
 		case '?': k->sym = SDLK_QUESTION; break;
 		case 167: k->sym = SDLK_BACKQUOTE; break;  /* § for finns */
+		default: k->mod = orig_mod;  /* if no match, leave the mod alone */
 		}
 	}
 
