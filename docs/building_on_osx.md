@@ -1,24 +1,66 @@
 # Building on OS X
 
-Building on Mac OS X is fairly straightforward once you've installed the Apple
-Developer's kit. If you have [Homebrew](http://brew.sh/) available, you should
-be able to install SDL with a simple `brew install sdl`, after which you can
-mostly follow the Linux instructions and you'll end up with a unix-style
-`schismtracker` binary that you can run from `Terminal.app`.
+Start by installing [Homebrew](http://brew.sh/). Open up the Terminal and paste in the following command.
 
-Alternately, you can also install the [SDL Developers
-Library](http://libsdl.org/download-1.2.php), but this tends to be somewhat
-more complicated as all the required pieces aren't shipped in the same package.
-Make sure to grab both the source and the Runtime Libraries, and some reports
-suggest that you might have to fiddle with paths to get `sdl.m4` working. But
-really, there's not much advantage over just using `brew`.
+```
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
 
-If you want a "normal" application that you could drop into `/Applications`,
-put in your dock, etc., copy that `schismtracker` binary into
-`sys/macosx/Schism Tracker.app/Contents/MacOS/`, and then you can copy that
-bundle around like any other app. It will associate itself with .IT (and other)
-files, so you can double-click them and the Finder will load Schism Tracker
-automatically.
+After Homebrew has been successfully installed, you need to install `automake`, `autoconf`, `SDL` and `git`.
+
+```
+brew install automake autoconf sdl git
+```
+
+Now clone the GitHub repo:
+
+```
+git clone https://github.com/schismtracker/schismtracker.git
+```
+
+Enter the Schismtracker folder and run `autoreconf -i`
+
+```
+cd schismtracker
+autoreconf -i
+```
+
+Now you will need to create the `build` -folder, enter it and start `../configure`
+
+```
+mkdir -p build
+cd build
+../configure && make
+```
+
+Test Schismtracker from the commandline by typing
+
+```
+./schismtracker
+```
+
+If it worked, you are ready to start the updating of the **Schism Tracker.app**
+
+
+## Baking Schism Tracker into an App ready to be put in /Applications
+
+If you are in the `build` -folder, discover the `Schism_Tracker.app` subfolder `Contents` and, after creating the `MacOS` -folder, copy the newly built `schismtracker` there - then test the `Schism_Tracker.app` by clicking on it in Finder. Here are the instructions on how to do it (this will open a Finder window showing the `sys/macosx` -folder, where-in you will see the app itself. 
+
+```
+cd ../sys/macosx/Schism_Tracker.app/Contents/
+mkdir MacOS
+cd MacOS
+cp ../../../../../build/schismtracker .
+cd ../../../
+open .
+```
+
+If this newly baked version of `Schism_Tracker.app` worked, just copy it to your `/Applications` -folder.
+
+Enjoy.
+
+
+## Building for distribution
 
 However, if you want to build an application bundle *for distribution*, there's
 a few potential snags. In particular, SDK versions are backward-incompatible,
@@ -32,6 +74,7 @@ nuances of installing Fink and managing multiple SDKs, but these have become
 rather outdated and probably less than thoroughly useful. If anyone has current
 and first-hand experience with building on OS X which might be helpful to
 others, please feel free to share.
+
 
 ## Cross-compiling on a Linux host
 
